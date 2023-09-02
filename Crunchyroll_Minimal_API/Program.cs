@@ -25,17 +25,9 @@ app.UseHttpsRedirection();
 
 app.UseCors(MyAllowSpecificOrigins);
 
-app.MapGet("/crunchyroll", (CrunchyrollDBContext context) =>
-{
-    return context.Animes.Find(_ => true).ToList();
-});
+app.MapGet("/crunchyroll", (CrunchyrollDBContext ctx) => ctx.Animes.AsQueryable().ToList()); 
 
-app.MapGet("/crunchyroll/id", (CrunchyrollDBContext context, string id) =>
-{
-    var filter = Builders<Anime>.Filter.Eq(x => x._id, id);
-
-    return context.Animes.Find(filter).FirstOrDefault();
-});
+app.MapGet("/crunchyroll/id", (CrunchyrollDBContext ctx, string id) => ctx.Animes.AsQueryable().FirstOrDefault(x => x._id.Equals(id)));
 
 // By ID
 
